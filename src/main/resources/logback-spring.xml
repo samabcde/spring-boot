@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <configuration> -->
+<!-- <appender name="Console" -->
+<!-- class="ch.qos.logback.core.ConsoleAppender"> -->
+<!-- <encoder -->
+<!-- class="ch.qos.logback.core.encoder.LayoutWrappingEncoder"> -->
+<!-- <layout class="com.example.springboot.MaskingPatternLayout"> -->
+<!-- <patternsProperty>(?:user|Password)="([a-zA-Z0-9]+)" -->
+<!-- </patternsProperty> -->
+<!-- <pattern>%d [%thread] %-5level %logger{35} - %msg%n</pattern> -->
+<!-- </layout> -->
+<!-- </encoder> -->
+<!-- </appender> -->
+
+<!-- LOG everything at INFO level -->
+
+<!-- <root level="info"> -->
+<!-- <appender-ref ref="Console" /> -->
+<!-- </root> -->
+<!-- </configuration> -->
+<configuration scan="true" scanPeriod="30 seconds">
+
+	<property name="logFile" value="logs/employee.log" />
+	<property name="logFile-WS" value="logs/employee-ws.log" />
+
+	<appender name="employee"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logFile}</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logFile}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%thread] %-5level %logger{64} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="mainAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logFile-WS}</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logFile-WS}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%thread] %-5level %logger{64} - %replace(%msg){'having
+				masking logic for other property',''}%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="stdout"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder
+			class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="com.example.springboot.MaskingPatternLayout">
+				<patternsProperty>(?:User|Password)="([^".]*)"
+				</patternsProperty>
+				<pattern>%d [%thread] %-5level %logger{35} - %msg%n</pattern>
+			</layout>
+		</encoder>
+	</appender>
+<!-- 	<appender name="stdout" -->
+<!-- 		class="ch.qos.logback.core.ConsoleAppender"> -->
+<!-- 		<encoder -->
+<!-- 			class="ch.qos.logback.core.encoder.LayoutWrappingEncoder"> -->
+<!-- 			<layout -->
+<!-- 				class="com.b2s.service.travel.car.infrastructure.MaskingPatternLayout"> -->
+<!-- 				<patternsProperty>(?:User|Password)="([a-zA-Z0-9]+)" -->
+<!-- 				</patternsProperty> -->
+<!-- 				<pattern>%d [%thread] %-5level %logger{35} - %msg%n</pattern> -->
+<!-- 			</layout> -->
+<!-- 		</encoder> -->
+<!-- 	</appender> -->
+	<!-- <logger name="org.springframework.ws.client.MessageTracing" -->
+	<!-- level="TRACE" additivity="false"> -->
+	<!-- <appender-ref ref="mainAppender" /> -->
+	<!-- </logger> -->
+
+	<!-- <logger name="org.springframework.ws.server.MessageTracing" -->
+	<!-- level="TRACE" additivity="false"> -->
+	<!-- <appender-ref ref="mainAppender" /> -->
+	<!-- </logger> -->
+
+	<logger name="com.employee.LoggingRequestInterceptor"
+		level="TRACE" additivity="false">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="mainAppender" />
+	</logger>
+
+	<logger name="com.example.springboot.HelloController"
+		level="TRACE" additivity="false">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="mainAppender" />
+	</logger>
+
+	<root level="${root-log-level:-INFO}">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="mainAppender" />
+	</root>
+</configuration>
