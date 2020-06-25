@@ -1,0 +1,16 @@
+apiVersion : apps/v1beta1
+kind: Deployment
+metadata:
+  name: "samabcdecluster-304e"
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: "samabcdecluster-304e"
+    spec:
+      containers:
+        - name: "samabcdecluster-304e"
+          image: "samabcdecontainerregistry.azurecr.io/samabcdecluster"
+          ports:
+          - containerPort: 8080
