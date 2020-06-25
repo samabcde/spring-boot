@@ -27,6 +27,7 @@ jobs:
     - name: Build and push image to ACR
       id: build-image
       run: |
+        mvn package
         docker build "$GITHUB_WORKSPACE/." -f  "./Dockerfile" -t samabcdecontainerregistry.azurecr.io/samabcdecluster:${{ github.sha }}
         docker push samabcdecontainerregistry.azurecr.io/samabcdecluster:${{ github.sha }}
     
