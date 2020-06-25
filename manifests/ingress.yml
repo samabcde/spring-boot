@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "samabcdecluster-304e"
+    labels:
+        app: "samabcdecluster-304e"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: samabcdecluster61e0-samabcdecluster-304e.1f7ef573aa3d4e518190.southcentralus.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "samabcdecluster-304e"
+                servicePort: 8080
